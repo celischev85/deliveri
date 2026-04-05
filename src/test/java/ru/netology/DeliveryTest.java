@@ -1,24 +1,34 @@
 package ru.netology;
 
+import com.codeborne.selenide.Configuration;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.chrome.ChromeOptions;
+
 import java.time.Duration;
 import java.time.format.DateTimeFormatter;
+
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.*;
-import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.remote.DesiredCapabilities;
 
-class DeliveryTest {
+public class DeliveryTest {
+
+
+    static {
+        Configuration.browser = "chrome";
+        Configuration.headless = true; // гарантируем headless
+        ChromeOptions options = new ChromeOptions();
+        Configuration.browserCapabilities = options;
+    }
 
     @BeforeEach
     void setup() {
+
         open("http://localhost:9999");
     }
-
     @Test
     @DisplayName("Should successful plan and replan meeting")
     void shouldSuccessfulPlanAndReplanMeeting() {
