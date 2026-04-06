@@ -5,6 +5,7 @@ on: [ push, pull_request ]
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v2
 
@@ -17,10 +18,10 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-
       - name: Start SUT
+        # Запускаем jar из папки artifacts в фоновом режиме
+        run: java -jar ./artifacts/app-replan-delivery.jar &
 
-        run: java -Dfile.encoding=UTF-8 -jar ./artifacts/app-replan-delivery.jar &
       - name: Build with Gradle
 
-        run: ./gradlew test -Dselenide.headless=true -Dfile.encoding=UTF-8 --info
+        run: ./gradlew test -Dselenide.headless=true --info
