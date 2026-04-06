@@ -19,16 +19,21 @@ public class DeliveryTest {
 
     static {
         Configuration.browser = "chrome";
-        Configuration.headless = true; // гарантируем headless
+        Configuration.headless = true;
         ChromeOptions options = new ChromeOptions();
+        options.addArguments(
+
+                "--headless=new"
+          );
         Configuration.browserCapabilities = options;
     }
 
     @BeforeEach
     void setup() {
-
+        waitForSut("http://localhost:9999", 30);
         open("http://localhost:9999");
     }
+
     @Test
     @DisplayName("Should successful plan and replan meeting")
     void shouldSuccessfulPlanAndReplanMeeting() {
@@ -70,5 +75,23 @@ public class DeliveryTest {
         $("[data-test-id=success-notification]")
                 .shouldBe(visible)
                 .shouldHave(text("Встреча успешно запланирована на " + secondMeetingDate));
+    }
+
+    // Вспомогательный метод: ждём, пока SUT начнёт отвечать (timeoutSeconds сек)
+    private static void waitForSut(String url, int timeoutSeconds) {
+        long end = System.currentTimeMillis() + timeoutSeconds * 1000L;
+        while (System.currentTimeMillis() < end) {
+            try {
+                var conn = (java.net.HttpURLConnection) new java.net.URL(url).openConnection();
+                conn.setConnectTimeout(2000);
+                conn.setReadTimeout(2000);
+                conn.setRequestMethod("GET");
+                int code = conn.getResponseCode();
+                if (code >= 200 && code < 500) return;
+            } catch (Exception ignored) {
+            }
+            try { Thread.sleep(1000); } catch (InterruptedException e) { Thread.currentThread().interrupt(); break; }
+        }
+        throw new IllegalStateException("SUT is not available: " + url);
     }
 }
