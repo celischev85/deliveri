@@ -16,10 +16,9 @@ import static com.codeborne.selenide.Selenide.*;
 
 public class DeliveryTest {
 
-
     @BeforeEach
     void setup() {
-
+        Configuration.timeout = 60000; // миллисекунды
         open("http://localhost:9999");
     }
 
