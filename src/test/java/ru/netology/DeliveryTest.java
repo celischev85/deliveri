@@ -16,15 +16,18 @@ import static com.codeborne.selenide.Selenide.*;
 
 public class DeliveryTest {
 
-
+    // Настройка Selenide/Chrome для CI — добавлены важные опции
     static {
         Configuration.browser = "chrome";
         Configuration.headless = true;
         ChromeOptions options = new ChromeOptions();
         options.addArguments(
-
-                "--headless=new"
-          );
+                "--no-sandbox",
+                "--disable-dev-shm-usage",
+                "--headless=new",          // при проблемах попробуйте "--headless"
+                "--window-size=1366,768",
+                "--remote-allow-origins=*"
+        );
         Configuration.browserCapabilities = options;
     }
 
