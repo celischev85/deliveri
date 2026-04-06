@@ -20,6 +20,7 @@ public class DeliveryTest {
     void setup() {
         Configuration.timeout = 60000; // миллисекунды
         open("http://localhost:9999");
+        $("[data-test-id=city] input").shouldBe(visible, Duration.ofSeconds(60));
     }
 
     @Test
