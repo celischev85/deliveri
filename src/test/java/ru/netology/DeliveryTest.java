@@ -16,24 +16,10 @@ import static com.codeborne.selenide.Selenide.*;
 
 public class DeliveryTest {
 
-    // Настройка Selenide/Chrome для CI — добавлены важные опции
-    static {
-        Configuration.browser = "chrome";
-        Configuration.headless = true;
-        ChromeOptions options = new ChromeOptions();
-        options.addArguments(
-                "--no-sandbox",
-                "--disable-dev-shm-usage",
-                "--headless=new",          // при проблемах попробуйте "--headless"
-                "--window-size=1366,768",
-                "--remote-allow-origins=*"
-        );
-        Configuration.browserCapabilities = options;
-    }
 
     @BeforeEach
     void setup() {
-        waitForSut("http://localhost:9999", 30);
+
         open("http://localhost:9999");
     }
 
@@ -79,22 +65,5 @@ public class DeliveryTest {
                 .shouldBe(visible)
                 .shouldHave(text("Встреча успешно запланирована на " + secondMeetingDate));
     }
-
-    // Вспомогательный метод: ждём, пока SUT начнёт отвечать (timeoutSeconds сек)
-    private static void waitForSut(String url, int timeoutSeconds) {
-        long end = System.currentTimeMillis() + timeoutSeconds * 1000L;
-        while (System.currentTimeMillis() < end) {
-            try {
-                var conn = (java.net.HttpURLConnection) new java.net.URL(url).openConnection();
-                conn.setConnectTimeout(2000);
-                conn.setReadTimeout(2000);
-                conn.setRequestMethod("GET");
-                int code = conn.getResponseCode();
-                if (code >= 200 && code < 500) return;
-            } catch (Exception ignored) {
-            }
-            try { Thread.sleep(1000); } catch (InterruptedException e) { Thread.currentThread().interrupt(); break; }
-        }
-        throw new IllegalStateException("SUT is not available: " + url);
-    }
+    
 }
