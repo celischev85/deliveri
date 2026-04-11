@@ -20,7 +20,7 @@ jobs:
 
       - name: Start SUT
         # Запускаем jar из папки artifacts в фоновом режиме
-        run: java -jar ./artifacts/app-replan-delivery.jar &
+        run:  java -jar ./artifacts/app-replan-delivery.jar&
 
       - name: Build with Gradle
 
