@@ -1,11 +1,9 @@
 package ru.netology;
 
-import com.codeborne.selenide.Configuration;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.Keys;
-import org.openqa.selenium.chrome.ChromeOptions;
 
 import java.time.Duration;
 import java.time.format.DateTimeFormatter;
@@ -18,9 +16,9 @@ public class DeliveryTest {
 
     @BeforeEach
     void setup() {
-        Configuration.timeout = 60000; // миллисекунды
         open("http://localhost:9999");
-        $("[data-test-id=city] input").shouldBe(visible, Duration.ofSeconds(60));
+        // краткая проверка, что страница открылась; основное ожидание — в should(...) в тестах
+        $("[data-test-id=city] input").shouldBe(visible, Duration.ofSeconds(10));
     }
 
     @Test
@@ -54,16 +52,16 @@ public class DeliveryTest {
         $(byText("Запланировать")).click();
 
         $("[data-test-id=replan-notification]")
-                .shouldBe(visible)
+                .shouldBe(visible, Duration.ofSeconds(10))
                 .shouldHave(text("У вас уже запланирована встреча на другую дату. Перепланировать?"));
 
         $("[data-test-id=replan-notification] button")
-                .shouldBe(visible)
+                .shouldBe(visible, Duration.ofSeconds(5))
                 .click();
 
         $("[data-test-id=success-notification]")
-                .shouldBe(visible)
+                .shouldBe(visible, Duration.ofSeconds(15))
                 .shouldHave(text("Встреча успешно запланирована на " + secondMeetingDate));
     }
-    
+
 }
