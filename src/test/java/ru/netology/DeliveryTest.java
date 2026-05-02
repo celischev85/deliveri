@@ -1,5 +1,8 @@
 package ru.netology;
 
+import com.codeborne.selenide.logevents.SelenideLogger;
+import io.qameta.allure.selenide.AllureSelenide;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,10 +17,17 @@ import static com.codeborne.selenide.Selenide.*;
 
 public class DeliveryTest {
 
+
+
+    @BeforeAll
+    static void setUpAll() {
+        SelenideLogger.addListener("allure", new AllureSelenide()
+                .screenshots(true)
+                .savePageSource(true));
+    }
     @BeforeEach
     void setup() {
         open("http://localhost:9999");
-        // краткая проверка, что страница открылась; основное ожидание — в should(...) в тестах
         $("[data-test-id=city] input").shouldBe(visible, Duration.ofSeconds(10));
     }
 
